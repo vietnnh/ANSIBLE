@@ -1,8 +1,6 @@
 [AS]
-AS1 ansible_host=10.215.26.164 ansible_become_password=321
-AS2 ansible_host=10.215.26.186 ansible_become_password=321
-[Router]
-R ansible_host=10.215.26.190 ansible_become_password=321
+AS1 ansible_host=10.215.26.153 ansible_become_password=321
+AS2 ansible_host=10.215.26.154 ansible_become_password=321
 [all:vars]
 ansible_user=admin
 ansible_password=123
