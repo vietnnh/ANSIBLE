@@ -11,7 +11,3 @@
       register: output
 
     - debug: var=output.stdout
-
-    - name: parse output
-      command_parser:
-        file: "parsers/ios/show_ip_interface_brief.yaml"
