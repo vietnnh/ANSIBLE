@@ -1,0 +1,158 @@
+---
+- name: DS1
+  hosts: DS1
+  gather_facts: no
+
+  tasks:
+    - name: Creat Vlan on DS1
+      ios_vlan:
+        aggregate:
+          - { vlan_id : 10 }
+          - { vlan_id : 20 }
+
+    - name: Set mode trunk on DS1
+      ios_config:
+        lines:
+          - no ip cef
+          - spanning-tree mode rapid-pvst
+
+    - name: Chuyen cong e0/1 - e0/3 sang mode trunk
+      ios_config:
+        parents:
+          - int range e0/1-3
+        lines:
+          - sw trunk en dot1q
+          - sw mode trunk
+
+    - name: Show Vlan On DS1
+      ios_command:
+        commands:
+          - show vlan brief
+          - sh ip int br
+          - show standby
+
+      register: show_ip
+
+    - name: HSRP Vlan 10
+      ios_config:
+        parents:
+          - int vlan 10
+        lines:
+          - no sh
+          - ip address 10.1.10.252 255.255.255.0
+          - standby 10 ip 10.1.10.254
+          - standby 10 priority 150
+          - standby 10 preempt
+          - ip ospf 1 area 0
+
+    - name: HSRP Vlan 20
+      ios_config:
+        parents:
+          - int vlan 20
+        lines:
+          - no sh                       
+          - ip address 10.1.20.252 255.255.255.0
+          - standby 20 ip 10.1.20.254
+          - standby 20 priority 100
+          - standby 20 preempt
+          - ip ospf 1 area 0
+
+    - name: OSPF
+      ios_config:
+        parents:
+          - router ospf 1
+        lines:
+          - router-id 2.2.2.2
+
+    - name: Set ip
+      ios_config:
+        parents:
+          - int e1/0
+        lines:
+          - no sw
+          - no sh
+          - ip ospf 1 area 0
+    - name: Set Ethernet1/0 IPv4 address
+      ios_l3_interface:
+        name: Ethernet1/0
+        ipv4: 172.16.12.2/24
+###
+- name: DS2
+  hosts: DS2
+  gather_facts: no
+
+  tasks:
+  
+    - name: Creat Vlan on DS1
+      ios_vlan:
+        aggregate:
+          - { vlan_id : 10 }
+          - { vlan_id : 20 }
+
+    - name: Set mode trunk on DS2
+      ios_config:
+        lines:
+          - no ip cef
+          - spanning-tree mode rapid-pvst
+
+    - name: Chuyen cong e0/1 - e0/3 sang mode trunk
+      ios_config:
+        parents:
+          - int range e0/1-3
+        lines:
+          - sw trunk en dot1q
+          - sw mode trunk
+
+    - name: Show Vlan On DS1
+      ios_command:
+        commands:
+          - show vlan brief
+          - sh ip int br
+          - show standby
+
+      register: show_ip
+
+    - name: HSRP Vlan 10
+      ios_config:
+        parents:
+          - int vlan 10
+        lines:
+          - no sh
+          - ip address 10.1.10.253 255.255.255.0
+          - standby 10 ip 10.1.10.254
+          - standby 10 priority 100
+          - standby 10 preempt
+          - ip ospf 1 area 0
+
+    - name: HSRP Vlan 20
+      ios_config:
+        parents:
+          - int vlan 20
+        lines:
+          - no sh                       
+          - ip address 10.1.20.253 255.255.255.0
+          - standby 20 ip 10.1.20.254
+          - standby 20 priority 150
+          - standby 20 preempt
+          - ip ospf 1 area 0
+
+    - name: OSPF
+      ios_config:
+        parents:
+          - router ospf 1
+        lines:
+          - router-id 3.3.3.3
+
+    - name: Set ip
+      ios_config:
+        parents:
+          - int e1/0
+        lines:
+          - no sw
+          - no sh
+          - ip ospf 1 area 0
+    - name: Set Ethernet1/0 IPv4 address
+      ios_l3_interface:
+        name: Ethernet1/0
+        ipv4: 172.16.13.2/24
+    

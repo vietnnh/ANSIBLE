@@ -1,13 +1,18 @@
 ---
 - name: Dat ip cho loobpack
-  hosts: Ro # tên của thiết bị trong Ansible server( vì ở đây chỉ có router nên có thể để all)
+  hosts: R # tên của thiết bị trong Ansible server( vì ở đây chỉ có router nên có thể để all)
 # các tác vụ
   tasks:
     - name: Set loopback IPv4 address # Đặt tên task để quản lý
       ios_l3_interface: # Do cấu hình router nên bắt buộc khai báo như vậy
         name: loopback 1 # tên cổng
         ipv4: 10.0.0.1/24 # địa chỉ IP của loopback
-
+    - name: Set ip OSPF loop
+      ios_config:
+        parents:
+          - int loopback 1
+        lines:
+          - ip ospf 1 area 0
     - name: Set fastEthernet0/1 IPv4 address
       ios_l3_interface:
         name: fastEthernet0/1

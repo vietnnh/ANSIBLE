@@ -1,0 +1,16 @@
+DS]
+DS1 ansible_host=10.215.26.228
+DS2 ansible_host=10.215.26.227
+[AS]
+AS1 ansible_host=10.215.26.226
+AS2 ansible_host=10.215.26.232
+[R]
+Router ansible_host=10.215.26.239
+[all:vars]
+ansible_become_password=321
+ansible_user=admin
+ansible_password=123
+ansible_connection=network_cli
+ansible_become="yes"
+ansible_become_method="enable"
+ansible_network_os=ios
