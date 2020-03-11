@@ -1,0 +1,76 @@
+---
+- name: AS1
+  hosts: AS1
+  gather_facts: no
+
+  tasks:
+    - name: Creat Vlan on AS1
+      ios_vlan:
+        aggregate:
+          - { vlan_id: 10, name: KeToan, interfaces: [Ethernet3/1] }
+          - { vlan_id: 20, name: Kythuat, interfaces: [Ethernet3/2] }
+
+    - name: Show Vlan
+      ios_command:
+        commands:
+          - show vlan brief
+      register: show_vlan
+
+    - name: Set mode Trunking Vlan
+      ios_config:
+        lines:
+          - spanning-tree mode rapid-pvst
+
+    - name: Chuyen cong e0/1 - e0/2 sang mode trunk
+      ios_config:
+        parents:
+          - int ran e0/1-2
+        lines:
+          - sw trunk en dot1q
+          - sw mode trunk
+
+    - name: Show Trunking
+      ios_command:
+        commands:
+          - show int trunk
+      register: show_trunk
+
+    - debug: var=show_ip.stdout_lines, var=show_trunk.stdout_lines
+# SW-AS2
+- name: AS2
+  hosts: AS2
+  gather_facts: no
+
+  tasks:
+    - name: Creat Vlan on AS2
+      ios_vlan:
+        aggregate:
+          - { vlan_id: 10, name: KeToan, interfaces: [Ethernet3/1], delay: 5 }
+          - { vlan_id: 20, name: Kythuat, interfaces: [Ethernet3/2], delay: 5 }
+
+    - name: Show Vlan
+      ios_command:
+        commands:
+          - show vlan brief
+      register: show_vlan
+
+    - name: Set mode trunking
+      ios_config:
+        lines:
+          - spanning-tree mode rapid-pvst
+
+    - name: Chuyen cong e0/1 - e0/2 sang mode trunk
+      ios_config:
+        parents:
+          - int range e0/1-2
+        lines:
+          - sw trunk en dot1q
+          - sw mode trunk
+
+    - name: Show Trunking
+      ios_command:
+        commands:
+          - show int trunk
+      register: show_trunk
+
+    - debug: var=show_vlanas2.stdout_lines
