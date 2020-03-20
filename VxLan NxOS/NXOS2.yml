@@ -14,7 +14,7 @@
         interface: nve1
         vni: 20200
         multicast_group: 239.239.239.100
-        suppress_arp: yes
+        suppress_arp: no
 
     - name: Add L2VNI to EVPN
       nxos_evpn_vni:
