@@ -1,6 +1,6 @@
 ---
 - name: Tao L2VNI
-  hosts: all
+  hosts: NXOS2
 
   tasks:
     - name: Tao Vlan va map den VNI
