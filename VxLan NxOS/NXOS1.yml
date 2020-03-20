@@ -19,7 +19,6 @@
         interface: Ethernet1/1
         ospf: 10
         area: 0
-        bfd: disable
         cost: default
 
     - name: Set the downlink to access and assign the VLAN to it
