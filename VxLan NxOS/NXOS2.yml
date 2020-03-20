@@ -13,14 +13,12 @@
       nxos_vxlan_vtep_vni:
         interface: nve1
         vni: 5000
-        multicast_group: 10.10.10.10
-        suppress_arp: true
+        ingress_replication: default
     - name : OSPF
       nxos_interface_ospf:
         interface: Ethernet1/1
         ospf: 10
         area: 0
-        bfd: disable
         cost: default
 
     - name: Set the downlink to access and assign the VLAN to it
