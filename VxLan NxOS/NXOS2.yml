@@ -13,8 +13,8 @@
       nxos_vxlan_vtep_vni:
         interface: nve1
         vni: 5000
-        ingress_replication: default
-        peer_list: 10.10.10.10
+        multicast_group: 239.239.239.100
+        suppress_arp: true
     - name : OSPF
       nxos_interface_ospf:
         interface: Ethernet1/1
