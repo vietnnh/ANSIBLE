@@ -1,0 +1,30 @@
+---
+- name: Tao L2VNI
+  hosts: all
+
+  tasks:
+    - name: Tao Vlan va map den VNI
+      nxos_vlan:
+        vlan_id: 50
+        mapped_vni: 5000
+        admin_state: up
+
+    - name: Add L2VNI to Overlay
+      nxos_vxlan_vtep_vni:
+        interface: nve1
+        vni: 5000
+        multicast_group: 10.10.10.10
+        suppress_arp: true
+    - name : OSPF
+      nxos_interface_ospf:
+        interface: Ethernet1/1
+        ospf: 10
+        area: 0
+        bfd: disable
+        cost: default
+
+    - name: Set the downlink to access and assign the VLAN to it
+      nxos_l2_interface:
+        name: Ethernet1/2
+        mode: access
+        access_vlan: 50
