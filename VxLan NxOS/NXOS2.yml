@@ -22,7 +22,7 @@
         cost: default
 
     - name: Set the downlink to access and assign the VLAN to it
-      nxos_l2_interface:
+      nxos_interface:
         name: Ethernet1/2
         mode: access
         access_vlan: 50
