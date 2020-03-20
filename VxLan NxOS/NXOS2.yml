@@ -1,32 +1,29 @@
 ---
-- name: Tao L2VNI
-  hosts: NXOS2
+- name: Create L2VNI
+  hosts: all
 
   tasks:
-    - name: Tao Vlan va map den VNI
+    - name: Create VLAN and map to the VNI
       nxos_vlan:
-        vlan_id: 50
-        mapped_vni: 5000
+        vlan_id: 2200
+        mapped_vni: 20200
         admin_state: up
 
     - name: Add L2VNI to Overlay
       nxos_vxlan_vtep_vni:
         interface: nve1
-        description: default
-        host_reachability: default
-        source_interface: Loopback0
-        source_interface_hold_down_time: 30
-        shutdown: default
-        vni: 5000
-    - name : OSPF
-      nxos_interface_ospf:
-        interface: Ethernet1/1
-        ospf: 10
-        area: 0
-        cost: default
+        vni: 20200
+        multicast_group: 239.239.239.100
+        suppress_arp: true
+
+    - name: Add L2VNI to EVPN
+      nxos_evpn_vni:
+        vni: 20200
+        route_distinguisher: auto
+        route_target_both: auto
 
     - name: Set the downlink to access and assign the VLAN to it
       nxos_l2_interface:
         name: Ethernet1/2
         mode: access
-        access_vlan: 50
+        access_vlan: 2200
