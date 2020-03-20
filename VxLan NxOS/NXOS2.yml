@@ -12,9 +12,12 @@
     - name: Add L2VNI to Overlay
       nxos_vxlan_vtep_vni:
         interface: nve1
+        description: default
+        host_reachability: default
+        source_interface: Loopback0
+        source_interface_hold_down_time: 30
+        shutdown: default
         vni: 5000
-        multicast_group: 239.239.239.100
-        suppress_arp: yes
     - name : OSPF
       nxos_interface_ospf:
         interface: Ethernet1/1
