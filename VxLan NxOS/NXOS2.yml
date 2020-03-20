@@ -14,6 +14,7 @@
         interface: nve1
         vni: 5000
         ingress_replication: default
+        peer_list: 10.10.10.10
     - name : OSPF
       nxos_interface_ospf:
         interface: Ethernet1/1
@@ -22,7 +23,7 @@
         cost: default
 
     - name: Set the downlink to access and assign the VLAN to it
-      nxos_interface:
+      nxos_l3_interface:
         name: Ethernet1/2
         mode: access
         access_vlan: 50
