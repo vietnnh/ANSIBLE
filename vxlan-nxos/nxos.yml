@@ -1,0 +1,125 @@
+---
+- name: NXOS1
+  hosts: nxos1
+  gather_facts: no
+
+  tasks:
+    - name: Enable services
+      nxos_config:
+        lines:
+          - feature ospf
+          - feature vn-segment-vlan-based
+          - feature nv overlay
+          - system jumbomtu 9216
+
+    - name: Config ospf
+      nxos_config:
+        lines:
+          - router ospf 1
+
+    - name: Set ospf for int e1/2
+      nxos_config:
+        parents:
+          - int e1/2
+        lines:
+          - no switchport
+          - no shutdown
+          - ip address 100.1.1.1/30
+          - ip router ospf 1 area 0
+
+    - name: Create vlan 50
+      nxos_config:
+        parents:
+          - vlan 50
+        lines:
+          - vn-segment 5000
+
+    - name: Access vlan 50
+      nxos_config:
+        parents:
+          - int e1/3
+        lines:
+          - switchport mode access
+          - switchport access vlan 50
+
+    - name: Creat NVE
+      nxos_config:
+        parents:
+          - int nve 1
+        lines:
+          - no shut
+          - source-interface loopback 0
+          - member vni 5000
+          - ingress-replication protocol static
+          - peer-ip 20.20.20.20
+
+    - name: Config ospf for looback
+      nxos_config:
+        parents:
+          - int loopback 0
+        lines:
+          - ip address 10.10.10.10/32
+          - ip router ospf 1 area 0
+
+###
+- name: NXOS2
+  hosts: nxos2
+  gather_facts: no
+
+  tasks:
+    - name: Enable services
+      nxos_config:
+        lines:
+          - feature ospf
+          - feature vn-segment-vlan-based
+          - feature nv overlay
+          - system jumbomtu 9216
+
+    - name: Config ospf
+      nxos_config:
+        lines:
+          - router ospf 1
+
+    - name: Set ospf for int e1/2
+      nxos_config:
+        parents:
+          - int e1/2
+        lines:
+          - no switchport
+          - no shutdown
+          - ip address 100.1.1.2/30
+          - ip router ospf 1 area 0
+
+    - name: Create vlan 50
+      nxos_config:
+        parents:
+          - vlan 50
+        lines:
+          - vn-segment 5000
+
+    - name: Access vlan 50
+      nxos_config:
+        parents:
+          - int e1/3
+        lines:
+          - switchport mode access
+          - switchport access vlan 50
+
+    - name: Creat NVE
+      nxos_config:
+        parents:
+          - int nve 1
+        lines:
+          - no shut
+          - source-interface loopback 0
+          - member vni 5000
+          - ingress-replication protocol static
+          - peer-ip 10.10.10.10
+
+    - name: Config ospf for looback
+      nxos_config:
+        parents:
+          - int loopback 0
+        lines:
+          - ip address 20.20.20.20/32
+          - ip router ospf 1 area 0
