@@ -1,0 +1,9 @@
+[nexus]
+nxos1 ansible_host=10.215.26.154
+nxos2 ansible_host=10.215.26.155
+
+[all:vars]
+ansible_user=admin
+ansible_password=Vnpro123
+ansible_connection= network_cli
+ansible_network_os= nxos
