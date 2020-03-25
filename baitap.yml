@@ -1,6 +1,6 @@
 ---
 - name: baitap
-  host: all
+  hosts: all
 
   tasks:
     - name: dat ip cho loopback
