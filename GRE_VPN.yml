@@ -1,0 +1,11 @@
+---
+- name: GRE VPN
+  hosts: R1
+
+  tasks:
+    - name: Set ip add
+      ios_l3_interface:
+        name: Ethernet0/2
+        ipv4: 10.0.0.2/30
+        name: Ethernet0/1
+        ipv4: 11.1.1.0/30
