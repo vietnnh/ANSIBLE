@@ -1,10 +1,65 @@
 ---
-- name: GRE VPN
+- name: Cau hinh tren R1
   hosts: R1
 
   tasks:
-    - name: Set ip add
+    - name: Set ip e0/2
       ios_l3_interface:
         name: Ethernet0/2
         ipv4: 10.0.0.2/30
+    - name: Set ip e0/1
+      ios_l3_interface:
+        name: Ethernet0/1
+        ipv4: 11.1.1.2/30
+- name : Cau hinh tren R2
+  hosts: R2
 
+  tasks:
+    - name: Set ip e0/2
+      ios_l3_interface:
+        name: Ethernet0/2
+        ipv4: 10.0.0.1/30
+    - name: Set ip e0/1
+      ios_l3_interface:
+        name: Ethernet0/1
+        ipv4: 172.16.1.1/24
+    - name: Static route
+      ios_static_route:
+        prefix: 0.0.0.0
+        mask: 0.0.0.0
+        next_hop: 10.0.0.2
+    - name: Thiet lap VPN tunnel
+      ios_config:
+        lines:
+          - ip add 172.16.12.1 255.255.255.252
+          - tunnel source e0/2
+          - tunnel dest 11.1.1.1
+          - tunnel mode gre ip
+        parents: interface tunnel 0
+- name: Cau hinh tren R3
+  hosts: R3
+
+  tasks:
+    - name: Set ip e0/2
+      ios_l3_interface:
+        name: Ethernet0/2
+        ipv4: 11.1.1.1/30
+    - name: Set ip e0/1
+      ios_l3_interface:
+        name: Ethernet0/1
+        ipv4: 172.16.2.1/24
+    - name: Static route
+      ios_static_route:
+        prefix: 0.0.0.0
+        mask: 0.0.0.0
+        next_hop: 11.1.1.2
+    - name: Thiet lap VPN tunnel
+      ios_config:
+        lines:
+          - ip add 172.16.12.2 255.255.255.252
+          - tunnel source e0/2
+          - tunnel dest 10.0.0.1
+          - tunnel mode gre ip
+        parents: interface tunnel 0
+    
+          
