@@ -1,0 +1,10 @@
+[R]
+R ansible_host=113.161.103.60 ansible_port=32775
+[all:vars]
+ansible_become_password=321
+ansible_user=admin
+ansible_password=123
+ansible_connection=network_cli
+ansible_become="yes"
+ansible_become_method="enable"
+ansible_network_os=ios
