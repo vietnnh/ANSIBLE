@@ -6,7 +6,7 @@
     - name: Set loopback IPv4 address # Đặt tên task để quản lý
       ios_l3_interface: # do cấu hình router nên bắt buộc khai báo như vậy
         name: loopback 2 # tên cổng
-        ipv4: 10.0.2.1/24 # địa chỉ IP của loopback
+        ipv4: 10.10.10.1/24 # địa chỉ IP của loopback
 
     - name: Set Ethernet0/1 IPv4 address
       ios_l3_interface:
