@@ -1,0 +1,17 @@
+---
+- name: dat ip cho loobpack
+  hosts: all # tên của thiết bị trong Ansible server( vì ở đây chỉ có router nên có thể để all)
+# các tác vụ
+  tasks:
+    - name: Set loopback IPv4 address # Đặt tên task để quản lý
+      ios_l3_interface: # do cấu hình router nên bắt buộc khai báo như vậy
+        name: loopback 0 # tên cổng
+        ipv4: 7.7.7.7/24 # địa chỉ IP của loopback
+
+    - name: Show ip
+      ios_command: # Viết lệnh để gửi ở mode command line của router
+        commands:
+          - show ip int brief
+      register: show_ip # gắn kết quả vào biến show_ip
+
+    - debug: var=show_ip.stdout_lines # debug: in ra màn hình, đặt biến var(lấy thông tin của các dòng từ show_ip gắn vào),in biến var
